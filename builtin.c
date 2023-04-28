@@ -9,6 +9,15 @@
 int shelly_cd_helper(char **, char *, struct stat);
 int shelly_cd_helper2(char *, char *, char **);
 
+/**
+ * shelly_cd_helper - Helper function inside shelly_cd_helper
+ * @args: A pointer to a pointer of array of arguments
+ * @oldpwd: A pointer to old working directory
+ * @dir: File system status
+ *
+ * Return: On success, zero is returned.
+ *         On error, -1 is returned, and errno is set appropriately.
+ */
 int shelly_cd_helper(char **args, char *oldpwd, struct stat dir)
 {
 	if (args[0])
@@ -48,6 +57,14 @@ int shelly_cd_helper(char **args, char *oldpwd, struct stat dir)
 	}
 }
 
+/**
+ * shelly_cd_helper2 - Helper function inside shelly_cd_helper
+ * @pwd: Pointer to current working directory
+ * @oldpwd: Pointer to previous working directory
+ * @dir_info: Directory info
+ *
+ * Return: -1
+ */
 int shelly_cd_helper2(char *pwd, char *oldpwd, char **dir_info)
 {
 	pwd = getcwd(pwd, 0);
@@ -139,7 +156,7 @@ int shelly_exit(char **args, char **front)
  *         If an error occurs - -1.
  *         Otherwise - 0.
  */
-int shelly_cd(char **args, char __attribute__((__unused__)) **front)
+int shelly_cd(char **args, char __attribute__((__unused__)) * *front)
 {
 	char **dir_info, *new_line = "\n";
 	char *oldpwd = NULL, *pwd = NULL;
