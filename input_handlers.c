@@ -6,32 +6,86 @@
 
 #include "shell.h"
 
+int shelly_call_args_helper(char **, int, int *);
+
+/**
+ * shelly_call_args_helper - Helper function for shelly_call_args
+ * @args: A pointer to a pointer of array of arguments
+ * @response: The return value
+ * @exec_ret: The return value of the parent process' last executed command.
+ *
+ * Return: The return value of the executed command
+ */
+int shelly_call_args_helper(char **args, int response, int *exec_ret)
+{
+	int i;
+	for (i = 0; args[i]; i++)
+	{
+		if (shelly_strncmp(args[i], "||", 2) == 0)
+		{
+			free(args[i]);
+			args[i] = NULL;
+			args = shelly_replace_aliases(args);
+			response = shelly_run_args(args, beg_arg, exec_ret);
+			if (*exec_ret != 0)
+			{
+				args = &args[++i];
+				i = 0;
+			}
+			else
+			{
+				for (i++; args[i]; i++)
+					free(args[i]);
+				return (response);
+			}
+		}
+		else if (shelly_strncmp(args[i], "&&", 2) == 0)
+		{
+			free(args[i]);
+			args[i] = NULL;
+			args = shelly_replace_aliases(args);
+			response = shelly_run_args(args, beg_arg, exec_ret);
+			if (*exec_ret == 0)
+			{
+				args = &args[++i];
+				i = 0;
+			}
+			else
+			{
+				for (i++; args[i]; i++)
+					free(args[i]);
+				return (response);
+			}
+		}
+	}
+}
+
 /**
  * shelly_handle_args - Gets, calls, and runs the execution of a command.
- * @exe_ret: The return value of the parent process' last executed command.
+ * @exec_ret: The return value of the parent process' last executed command.
  *
  * Return: If an end-of-file is read - END_OF_FILE (-2).
  *         If the input cannot be tokenized - -1.
  *         O/w - The exit value of the last executed command.
  */
-int shelly_handle_args(int *exe_ret)
+int shelly_handle_args(int *exec_ret)
 {
-	int ret = 0, i;
+	int response = 0, i;
 	char *line = NULL, **args, **beg_arg;
 
-	line = shelly_get_args(line, exe_ret);
+	line = shelly_get_args(line, exec_ret);
 	if (line == NULL)
 		return (SHELLY_END_OF_FILE);
 
 	args = shelly_strtok(line, " ");
 	free(line);
 	if (args == NULL)
-		return (ret);
+		return (response);
 	if (shelly_check_args(args) != 0)
 	{
-		*exe_ret = 2;
+		*exec_ret = 2;
 		shelly_free_args(args, args);
-		return (*exe_ret);
+		return (*exec_ret);
 	}
 	beg_arg = args;
 
@@ -41,27 +95,27 @@ int shelly_handle_args(int *exe_ret)
 		{
 			free(args[i]);
 			args[i] = NULL;
-			ret = shelly_call_args(args, beg_arg, exe_ret);
+			response = shelly_call_args(args, beg_arg, exec_ret);
 			args = &args[++i];
 			i = 0;
 		}
 	}
 	if (args)
-		ret = shelly_call_args(args, beg_arg, exe_ret);
+		response = shelly_call_args(args, beg_arg, exec_ret);
 
 	free(beg_arg);
-	return (ret);
+	return (response);
 }
 
 /**
  * shelly_get_args - Gets a command from standard input.
  * @line: A buffer to store the command.
- * @exe_ret: The return value of the last executed command.
+ * @exec_ret: The return value of the last executed command.
  *
  * Return: If an error occurrs - NULL.
  *         Otherwise - a pointer to the stored command.
  */
-char *shelly_get_args(char *line, int *exe_ret)
+char *shelly_get_args(char *line, int *exec_ret)
 {
 	size_t size = 0;
 	ssize_t read;
@@ -78,11 +132,11 @@ char *shelly_get_args(char *line, int *exe_ret)
 		history++;
 		if (isatty(STDIN_FILENO))
 			write(STDOUT_FILENO, prompt, 2);
-		return (shelly_get_args(line, exe_ret));
+		return (shelly_get_args(line, exec_ret));
 	}
 
 	line[read - 1] = '\0';
-	shelly_replace_variable(&line, exe_ret);
+	shelly_replace_variable(&line, exec_ret);
 	shelly_handle_line(&line, read);
 
 	return (line);
@@ -92,90 +146,53 @@ char *shelly_get_args(char *line, int *exe_ret)
  * shelly_call_args - Partitions operators from commands and calls them.
  * @args: An array of arguments.
  * @beg_arg: A double pointer to the beginning of args.
- * @exe_ret: The return value of the parent process' last executed command.
+ * @exec_ret: The return value of the parent process' last executed command.
  *
  * Return: The return value of the last executed command.
  */
-int shelly_call_args(char **args, char **beg_arg, int *exe_ret)
+int shelly_call_args(char **args, char **beg_arg, int *exec_ret)
 {
-	int ret = 0, i;
+	int response = 0;
 
 	if (args[0] == NULL)
-		return (*exe_ret);
-	for (i = 0; args[i]; i++)
-	{
-		if (shelly_strncmp(args[i], "||", 2) == 0)
-		{
-			free(args[i]);
-			args[i] = NULL;
-			args = shelly_replace_aliases(args);
-			ret = shelly_run_args(args, beg_arg, exe_ret);
-			if (*exe_ret != 0)
-			{
-				args = &args[++i];
-				i = 0;
-			}
-			else
-			{
-				for (i++; args[i]; i++)
-					free(args[i]);
-				return (ret);
-			}
-		}
-		else if (shelly_strncmp(args[i], "&&", 2) == 0)
-		{
-			free(args[i]);
-			args[i] = NULL;
-			args = shelly_replace_aliases(args);
-			ret = shelly_run_args(args, beg_arg, exe_ret);
-			if (*exe_ret == 0)
-			{
-				args = &args[++i];
-				i = 0;
-			}
-			else
-			{
-				for (i++; args[i]; i++)
-					free(args[i]);
-				return (ret);
-			}
-		}
-	}
+		return (*exec_ret);
+
+	shelly_call_args_helper(args, response, exec_ret);
 	args = shelly_replace_aliases(args);
-	ret = shelly_run_args(args, beg_arg, exe_ret);
-	return (ret);
+	response = shelly_run_args(args, beg_arg, exec_ret);
+	return (response);
 }
 
 /**
  * shelly_run_args - Calls the execution of a command.
  * @args: An array of arguments.
  * @beg_arg: A double pointer to the beginning of args.
- * @exe_ret: The return value of the parent process' last executed command.
+ * @exec_ret: The return value of the parent process' last executed command.
  *
  * Return: The return value of the last executed command.
  */
-int shelly_run_args(char **args, char **beg_arg, int *exe_ret)
+int shelly_run_args(char **args, char **beg_arg, int *exec_ret)
 {
-	int ret, i;
+	int response, i;
 	int (*builtin)(char **args, char **beg_arg);
 
 	builtin = shelly_get_builtin(args[0]);
 	if (builtin)
 	{
-		ret = builtin(args + 1, beg_arg);
-		if (ret != SHELLY_EXIT)
-			*exe_ret = ret;
+		response = builtin(args + 1, beg_arg);
+		if (response != SHELLY_EXIT)
+			*exec_ret = response;
 	}
 	else
 	{
-		*exe_ret = shelly_execute(args, beg_arg);
-		ret = *exe_ret;
+		*exec_ret = shelly_execute(args, beg_arg);
+		response = *exec_ret;
 	}
 	history++;
 	for (i = 0; args[i]; i++)
 		free(args[i]);
 
-	return (ret);
+	return (response);
 }
 
 /**
