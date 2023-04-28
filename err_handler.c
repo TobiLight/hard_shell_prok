@@ -22,7 +22,8 @@ char *shelly_error_env(char **args)
 		return (NULL);
 
 	args--;
-	len = shelly_strlen(name) + shelly_strlen(history_str) + shelly_strlen(args[0]) + 45;
+	len = shelly_strlen(name) + shelly_strlen(history_str)
+		+ shelly_strlen(args[0]) + 45;
 	error = malloc(sizeof(char) * (len + 1));
 	if (error == NULL)
 	{
@@ -79,7 +80,8 @@ char *shelly_error_2_exit(char **args)
 	if (history_str == NULL)
 		return (NULL);
 
-	len = shelly_strlen(name) + shelly_strlen(history_str) + shelly_strlen(args[0]) + 27;
+	len = shelly_strlen(name) + shelly_strlen(history_str)
+		+ shelly_strlen(args[0]) + 27;
 	error = malloc(sizeof(char) * (len + 1));
 	if (!error)
 	{
@@ -113,7 +115,8 @@ char *shelly_error_2_cd(char **args)
 	if (history_str == NULL)
 		return (NULL);
 
-	len = shelly_strlen(name) + shelly_strlen(history_str) + shelly_strlen(args[0]) + 25;
+	len = shelly_strlen(name) + shelly_strlen(history_str)
+		+ shelly_strlen(args[0]) + 25;
 	if (args[0][0] == '-')
 		len += 15;
 	error = malloc(sizeof(char) * (len + 1));
@@ -152,7 +155,8 @@ char *shelly_error_2_syntax(char **args)
 	if (history_str == NULL)
 		return (NULL);
 
-	length = shelly_strlen(name) + shelly_strlen(history_str) + shelly_strlen(args[0]) + 33;
+	length = shelly_strlen(name) + shelly_strlen(history_str)
+		+ shelly_strlen(args[0]) + 33;
 	error = malloc(sizeof(char) * (length + 1));
 	if (!error)
 	{

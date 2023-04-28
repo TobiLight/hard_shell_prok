@@ -24,7 +24,8 @@ int shelly_cant_open(char *file_path)
 	if (!history_str)
 		return (127);
 
-	len = shelly_strlen(name) + shelly_strlen(history_str) + shelly_strlen(file_path) + 16;
+	len = shelly_strlen(name) + shelly_strlen(history_str)
+		+ shelly_strlen(file_path) + 16;
 	error_msg = malloc(sizeof(char) * (len + 1));
 	if (!error_msg)
 	{

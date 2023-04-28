@@ -19,7 +19,7 @@ int shelly_call_args_helper(char **, int, int *);
 int shelly_call_args_helper(char **args, int response, int *exec_ret)
 {
 	int i;
-	
+
 	for (i = 0; args[i]; i++)
 	{
 		if (shelly_strncmp(args[i], "||", 2) == 0)
