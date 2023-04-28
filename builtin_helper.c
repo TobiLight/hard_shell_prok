@@ -1,3 +1,11 @@
+/*
+ * File: builtin_helper.c
+ * Authors: Oluwatobiloba Light
+ *          Princewill Chimdi Samuel
+*/
+
+#include "shell.h"
+
 int shelly_cd_helper(char **, char *, struct stat);
 int shelly_cd_helper2(char *, char *, char **);
 

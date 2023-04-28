@@ -108,6 +108,8 @@ int shelly_unsetenv(char **, char __attribute__((__unused__)) **);
 int shelly_cd(char **, char __attribute__((__unused__)) **);
 int shelly_alias(char **, char __attribute__((__unused__)) **);
 int shelly_help(char **, char __attribute__((__unused__)) **);
+int shelly_cd_helper(char **, char *, struct stat);
+int shelly_cd_helper2(char *, char *, char **);
 
 /* ERROR HANDLER FUNCTIONS */
 char *shelly_error_2_exit(char **);
