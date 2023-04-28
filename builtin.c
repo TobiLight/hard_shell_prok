@@ -156,7 +156,7 @@ int shelly_exit(char **args, char **front)
  *         If an error occurs - -1.
  *         Otherwise - 0.
  */
-int shelly_cd(char **args, char __attribute__((__unused__)) * *front)
+int shelly_cd(char **args, char __attribute__((__unused__)) **front)
 {
 	char **dir_info, *new_line = "\n";
 	char *oldpwd = NULL, *pwd = NULL;
