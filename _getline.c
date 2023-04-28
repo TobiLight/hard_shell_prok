@@ -108,20 +108,17 @@ void *shelly_realloc(void *ptr, unsigned int old_size, unsigned int new_size)
 {
 	void *memory;
 	char *ptr_cpy, *fill;
-	unsigned int i;
+	unsigned int i = 0;
 
 	if (new_size == old_size)
 		return (ptr);
-
 	if (ptr == NULL)
 	{
 		memory = malloc(new_size);
 		if (memory == NULL)
 			return (NULL);
-
 		return (memory);
 	}
-
 	if (new_size == 0 && ptr != NULL)
 	{
 		free(ptr);
@@ -136,9 +133,11 @@ void *shelly_realloc(void *ptr, unsigned int old_size, unsigned int new_size)
 		return (NULL);
 	}
 	fill = memory;
-	for (i = 0; i < old_size && i < new_size; i++)
+	while (i < old_size && i < new_size)
+	{
 		fill[i] = *ptr_cpy++;
-
+		i++;
+	}
 	free(ptr);
 	return (memory);
 }
