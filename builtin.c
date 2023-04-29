@@ -162,7 +162,7 @@ int shelly_cd(char **args, char __attribute__((__unused__)) **beg_arg)
  *
  * Return: 0 on success, -1 on failure.
  */
-int shelly_help(char **args, char __attribute__((__unused__)) * *beg_arg)
+int shelly_help(char **args, char __attribute__((__unused__)) **beg_arg)
 {
 	if (args[0] == NULL)
 		shelly_help_all();
