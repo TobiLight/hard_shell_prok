@@ -6,6 +6,8 @@
 
 #include "shell.h"
 
+char *shelly_fill_path_dir(char *)
+
 /**
  * shelly_get_loc - Locates a command in the PATH.
  * @cmd: The command to locate.
