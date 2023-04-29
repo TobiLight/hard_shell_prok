@@ -1,4 +1,6 @@
-static ssize_t input;
+ssize_t shelly_getline(char **lineptr, size_t *n, FILE *stream)
+{
+	static ssize_t input;
 	ssize_t response;
 	static char *buffer[SHELLY_READ_BUF_SIZE], x = 'x';
 	int r;
@@ -35,3 +37,4 @@ static ssize_t input;
 	if (r != 0)
 		input = 0;
 	return (response);
+}
