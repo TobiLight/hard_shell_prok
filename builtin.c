@@ -5,7 +5,11 @@
  */
 
 #include "shell.h"
-int shelly_cd(char **, char __attribute__((__unused__)) **)
+
+int shellby_exit(char **, char **);
+int shellby_cd(char **, char __attribute__((__unused__)) **);
+int shellby_help(char **, char __attribute__((__unused__)) **);
+int (*get_builtin(char *))(char **, char **);
 
 /**
  * shelly_exit - Exits the shell.
