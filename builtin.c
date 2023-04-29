@@ -5,6 +5,7 @@
  */
 
 #include "shell.h"
+int shelly_cd(char **, char __attribute__((__unused__)) **)
 
 /**
  * shelly_exit - Exits the shell.
@@ -54,24 +55,91 @@ int shelly_exit(char **args, char **front)
 /**
  * shelly_cd - Changes the current directory of the shellby process.
  * @args: An array of arguments.
- * @front: A double pointer to the beginning of args.
+ * @beg_arg: A double pointer to the beginning of args.
  *
  * Return: If the given string is not a directory - 2.
  *         If an error occurs - -1.
  *         Otherwise - 0.
  */
-int shelly_cd(char **args, char __attribute__((__unused__)) **front)
+int shelly_cd(char **args, char __attribute__((__unused__)) **beg_arg)
 {
-	char **dir_info, *new_line = "\n";
+	char **directory_info, *new_line = "\n";
 	char *oldpwd = NULL, *pwd = NULL;
-	struct stat dir;
+	struct stat directory;
 
 	oldpwd = getcwd(oldpwd, 0);
 	if (oldpwd == NULL)
 		return (-1);
 
-	shelly_cd_helper(args, oldpwd, dir);
-	shelly_cd_helper2(pwd, oldpwd, dir_info);
+	if (args[0])
+	{
+		if (*(args[0]) == '-' || shelly_strcmp(args[0], "--") == 0)
+		{
+			if ((args[0][1] == '-' && args[0][2] == '\0') ||
+				args[0][1] == '\0')
+			{
+				if (shelly_getenv("OLDPWD") != NULL)
+					(chdir(*shelly_getenv("OLDPWD") + 7));
+			}
+			else
+			{
+				free(oldpwd);
+				return (shelly_create_error(args, 2));
+			}
+		}
+		else
+		{
+			if (stat(args[0], &dir) == 0 && S_ISDIR(dir.st_mode) &&
+				((dir.st_mode & S_IXUSR) != 0))
+			{
+				chdir(args[0]);
+			}
+			else
+			{
+				free(oldpwd);
+				return (shelly_create_error(args, 2));
+			}
+		}
+	}
+	else
+	{
+		if (shelly_getenv("HOME") != NULL)
+			chdir(*(shelly_getenv("HOME")) + 5);
+	}
+	pwd = getcwd(pwd, 0);
+	if (pwd == NULL)
+	{
+		free(oldpwd);
+		return (-1);
+	}
+
+	dir_info = malloc(sizeof(char *) * 2);
+	if (dir_info == NULL)
+	{
+		free(oldpwd);
+		free(pwd);
+		return (-1);
+	}
+
+	dir_info[0] = "OLDPWD";
+	dir_info[1] = oldpwd;
+	if (shelly_setenv(dir_info, dir_info) == -1)
+	{
+		free(oldpwd);
+		free(pwd);
+		free(dir_info);
+		return (-1);
+	}
+
+	dir_info[0] = "PWD";
+	dir_info[1] = pwd;
+	if (shelly_setenv(dir_info, dir_info) == -1)
+	{
+		free(oldpwd);
+		free(pwd);
+		free(dir_info);
+		return (-1);
+	}
 	if (args[0] && args[0][0] == '-' && args[0][1] != '-')
 	{
 		write(STDOUT_FILENO, pwd, shelly_strlen(pwd));
@@ -79,7 +147,7 @@ int shelly_cd(char **args, char __attribute__((__unused__)) **front)
 	}
 	free(oldpwd);
 	free(pwd);
-	free(dir_info);
+	free(directory_info);
 	return (0);
 }
 
