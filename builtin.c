@@ -4,7 +4,7 @@
  *       Princewill Chimdi Samuel
  */
 
-#include "shell.h"
+#include "shellx.h"
 
 int shellx_exit(char **, char **);
 int shellx_cd(char **, char __attribute__((__unused__)) **);
