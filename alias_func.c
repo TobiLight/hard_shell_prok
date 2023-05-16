@@ -4,7 +4,7 @@
  *	    Princewill Chimdi Samuel
 */
 
-#include "shell.h"
+#include "shellx.h"
 
 void shelly_set_alias(char *, char *);
 void shelly_print_alias(sh_alias_t *);
