@@ -4,7 +4,7 @@
  *       Princewill Chimdi Samuel
  */
 
-#include "shell.h"
+#include "shellx.h"
 
 /**
  * shellx_env - Prints the current environment.
