@@ -4,35 +4,35 @@
  *          Princewill Chimdi Samuel
  */
 
-#include "shell.h"
+#include "shellx.h"
 
-void shelly_sig_handler(int);
-int shelly_execute(char **, char **);
+void shellx_sig_handler(int);
+int shellx_execute(char **, char **);
 
 /**
- * shelly_sig_handler - Prints a new prompt upon a signal.
+ * shellx_sig_handler - Prints a new prompt upon a signal.
  * @sig: The signal.
  *
  * Return: nothing
  */
-void shelly_sig_handler(int sig)
+void shellx_sig_handler(int sig)
 {
 	char *new_prompt = "\n$ ";
 
 	(void)sig;
-	signal(SIGINT, shelly_sig_handler);
+	signal(SIGINT, shellx_sig_handler);
 	write(STDIN_FILENO, new_prompt, 3);
 }
 
 /**
- * shelly_execute - Executes a command in a child process.
+ * shellx_execute - Executes a command in a child process.
  * @args: An array of arguments.
  * @front: A double pointer to the beginning of args.
  *
  * Return: If an error occurs - a corresponding error code.
  *         O/w - The exit value of the last executed command.
  */
-int shelly_execute(char **args, char **front)
+int shellx_execute(char **args, char **front)
 {
 	pid_t child_pid;
 	int status, flag = 0, ret = 0;
@@ -41,15 +41,15 @@ int shelly_execute(char **args, char **front)
 	if (cmd[0] != '/' && cmd[0] != '.')
 	{
 		flag = 1;
-		cmd = shelly_get_loc(cmd);
+		cmd = shellx_get_loc(cmd);
 	}
 
 	if (cmd == NULL || (access(cmd, F_OK) == -1) || (access(cmd, X_OK) != 0))
 	{
 		if (errno == EACCES)
-			ret = (shelly_create_error(args, 126));
+			ret = (shellx_create_error(args, 126));
 		else
-			ret = (shelly_create_error(args, 127));
+			ret = (shellx_create_error(args, 127));
 	}
 	else
 	{
@@ -65,10 +65,10 @@ int shelly_execute(char **args, char **front)
 		{
 			execve(cmd, args, environ);
 			if (errno == EACCES)
-				ret = (shelly_create_error(args, 126));
-			shelly_free_env();
-			shelly_free_args(args, front);
-			shelly_free_alias_list(aliases);
+				ret = (shellx_create_error(args, 126));
+			shellx_free_env();
+			shellx_free_args(args, front);
+			shellx_free_alias_list(aliases);
 			_exit(ret);
 		}
 		else
@@ -97,41 +97,41 @@ int main(int argc, char *argv[])
 	name = argv[0];
 	history = 1;
 	aliases = NULL;
-	signal(SIGINT, shelly_sig_handler);
+	signal(SIGINT, shellx_sig_handler);
 	*exec_ret = 0;
-	environ = shelly_copyenv();
+	environ = shellx_copyenv();
 	if (environ == NULL)
 		exit(-100);
 
 	if (argc != 1)
 	{
-		ret = shelly_proc_commands(argv[1], exec_ret);
-		shelly_free_env();
-		shelly_free_alias_list(aliases);
+		ret = shellx_proc_commands(argv[1], exec_ret);
+		shellx_free_env();
+		shellx_free_alias_list(aliases);
 		return (*exec_ret);
 	}
 	if (!isatty(STDIN_FILENO))
 	{
-		while (ret != SHELLY_END_OF_FILE && ret != SHELLY_EXIT)
-			ret = shelly_handle_args(exec_ret);
-		shelly_free_env();
-		shelly_free_alias_list(aliases);
+		while (ret != shellx_END_OF_FILE && ret != shellx_EXIT)
+			ret = shellx_handle_args(exec_ret);
+		shellx_free_env();
+		shellx_free_alias_list(aliases);
 		return (*exec_ret);
 	}
 	while (1)
 	{
 		write(STDOUT_FILENO, prompt, 2);
-		ret = shelly_handle_args(exec_ret);
-		if (ret == SHELLY_END_OF_FILE || ret == SHELLY_EXIT)
+		ret = shellx_handle_args(exec_ret);
+		if (ret == shellx_END_OF_FILE || ret == shellx_EXIT)
 		{
-			if (ret == SHELLY_END_OF_FILE)
+			if (ret == shellx_END_OF_FILE)
 				write(STDOUT_FILENO, new_line, 1);
-			shelly_free_env();
-			shelly_free_alias_list(aliases);
+			shellx_free_env();
+			shellx_free_alias_list(aliases);
 			exit(*exec_ret);
 		}
 	}
-	shelly_free_env();
-	shelly_free_alias_list(aliases);
+	shellx_free_env();
+	shellx_free_alias_list(aliases);
 	return (*exec_ret);
 }
