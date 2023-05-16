@@ -4,7 +4,7 @@
  *       Princewill Chimdi Samuel
  */
 
-#include "shell.h"
+#include "shellx.h"
 
 /**
  * shelly_copyenv - Creates a copy of the environment.
