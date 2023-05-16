@@ -4,19 +4,19 @@
  *          Princewill Chimdi Samuel
  */
 
-#include "shell.h"
+#include "shellx.h"
 
-void shelly_appoint_lineptr(char **, size_t *, char *, size_t);
+void shellx_appoint_lineptr(char **, size_t *, char *, size_t);
 
 /**
- * shelly_getline - Reads input from a stream.
+ * shellx_getline - Reads input from a stream.
  * @lineptr: A buffer to store the input.
  * @n: The size of lineptr.
  * @stream: The stream to read from.
  *
  * Return: The number of bytes read.
  */
-ssize_t shelly_getline(char **lineptr, size_t *n, FILE *stream)
+ssize_t shellx_getline(char **lineptr, size_t *n, FILE *stream)
 {
 	static ssize_t input;
 	ssize_t ret;
@@ -47,13 +47,13 @@ ssize_t shelly_getline(char **lineptr, size_t *n, FILE *stream)
 		}
 
 		if (input >= 120)
-			buffer = shelly_realloc(buffer, input, input + 1);
+			buffer = shellx_realloc(buffer, input, input + 1);
 
 		buffer[input] = x;
 		input++;
 	}
 	buffer[input] = '\0';
-	shelly_appoint_lineptr(lineptr, n, buffer, input);
+	shellx_appoint_lineptr(lineptr, n, buffer, input);
 	ret = input;
 	if (r != 0)
 		input = 0;
@@ -61,7 +61,7 @@ ssize_t shelly_getline(char **lineptr, size_t *n, FILE *stream)
 }
 
 /**
- * shelly_appoint_lineptr - Reassigns the lineptr variable for shelly_getline.
+ * shellx_appoint_lineptr - Reassigns the lineptr variable for shellx_getline.
  * @lineptr: A buffer to store an input string.
  * @n: The size of lineptr.
  * @buffer: The string to assign to lineptr.
@@ -69,7 +69,7 @@ ssize_t shelly_getline(char **lineptr, size_t *n, FILE *stream)
  *
  * Return: void.
  */
-void shelly_appoint_lineptr(char **lineptr, size_t *n, char *buffer, size_t b)
+void shellx_appoint_lineptr(char **lineptr, size_t *n, char *buffer, size_t b)
 {
 	if (*lineptr == NULL)
 	{
@@ -89,13 +89,13 @@ void shelly_appoint_lineptr(char **lineptr, size_t *n, char *buffer, size_t b)
 	}
 	else
 	{
-		shelly_strcpy(*lineptr, buffer);
+		shellx_strcpy(*lineptr, buffer);
 		free(buffer);
 	}
 }
 
 /**
- * shelly_realloc - Reallocates a memory block using malloc and free.
+ * shellx_realloc - Reallocates a memory block using malloc and free.
  * @ptr: A pointer to the memory previously allocated.
  * @old_size: The size in bytes of the allocated space for ptr.
  * @new_size: The size in bytes for the new memory block.
@@ -104,7 +104,7 @@ void shelly_appoint_lineptr(char **lineptr, size_t *n, char *buffer, size_t b)
  *         If new_size == 0 and ptr is not NULL - NULL.
  *         Otherwise - a pointer to the reallocated memory block.
  */
-void *shelly_realloc(void *ptr, unsigned int old_size, unsigned int new_size)
+void *shellx_realloc(void *ptr, unsigned int old_size, unsigned int new_size)
 {
 	void *memory;
 	char *ptr_cpy, *fill;
