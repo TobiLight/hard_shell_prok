@@ -4,20 +4,20 @@
  *          Princewill Chimdi Samuel
  */
 
-#include "shell.h"
+#include "shellx.h"
 
-ssize_t shelly_get_new_len(char *);
-void shelly_logical_ops(char *, ssize_t *);
-void shelly_handle_line(char **, ssize_t);
+ssize_t shellx_get_new_len(char *);
+void shellx_logical_ops(char *, ssize_t *);
+void shellx_handle_line(char **, ssize_t);
 
 /**
- * shelly_logical_ops - Checks a line for logical operators "||" or "&&".
+ * shellx_logical_ops - Checks a line for logical operators "||" or "&&".
  * @line: A pointer to the character to check in the line.
- * @new_len: Pointer to new_len in shelly_get_new_len function.
+ * @new_len: Pointer to new_len in shellx_get_new_len function.
  *
  * Return: nothing
  */
-void shelly_logical_ops(char *line, ssize_t *new_len)
+void shellx_logical_ops(char *line, ssize_t *new_len)
 {
 	char prev = *(line - 1);
 	char curr = *line;
@@ -40,7 +40,7 @@ void shelly_logical_ops(char *line, ssize_t *new_len)
 }
 
 /**
- * shelly_handle_line - Parses input line and adds necessary spaces
+ * shellx_handle_line - Parses input line and adds necessary spaces
  * @line: Pointer to input line
  * @read: Length of input line
  *
@@ -48,14 +48,14 @@ void shelly_logical_ops(char *line, ssize_t *new_len)
  *              and replaces "#" with '\0'
  * Return: nothing
  */
-void shelly_handle_line(char **line, ssize_t read)
+void shellx_handle_line(char **line, ssize_t read)
 {
 	char *old_line, *new_line;
 	char prev, curr, next;
 	size_t i, j;
 	ssize_t new_len;
 
-	new_len = shelly_get_new_len(*line);
+	new_len = shellx_get_new_len(*line);
 	if (new_len == read - 1)
 		return;
 	new_line = malloc(new_len + 1);
@@ -132,7 +132,7 @@ void shelly_handle_line(char **line, ssize_t read)
 }
 
 /**
- * shelly_get_new_len - Computes the new length of a line partitioned
+ * shellx_get_new_len - Computes the new length of a line partitioned
  *               by ";", "||", "&&" or "#".
  * @line: A pointer to the line to check.
  *
@@ -141,7 +141,7 @@ void shelly_handle_line(char **line, ssize_t read)
  * Return: The new length of the line.
  */
 
-ssize_t shelly_get_new_len(char *line)
+ssize_t shellx_get_new_len(char *line)
 {
 	size_t i = 0;
 	ssize_t new_len = 0;
@@ -179,7 +179,7 @@ ssize_t shelly_get_new_len(char *line)
 					new_len++;
 			}
 			else
-				shelly_logical_ops(&line[i], &new_len);
+				shellx_logical_ops(&line[i], &new_len);
 		}
 		else if (curr == ';')
 		{
