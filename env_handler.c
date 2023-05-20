@@ -4,15 +4,15 @@
  *       Princewill Chimdi Samuel
  */
 
-#include "shell.h"
+#include "shellx.h"
 
 /**
- * shelly_copyenv - Creates a copy of the environment.
+ * shellx_copyenv - Creates a copy of the environment.
  *
  * Return: On success, a pointer to the new copy of the environment,
  *         otherwise NULL.
  */
-char **shelly_copyenv(void)
+char **shellx_copyenv(void)
 {
 	char **new_environ;
 	size_t size;
@@ -27,7 +27,7 @@ char **shelly_copyenv(void)
 
 	for (i = 0; environ[i]; i++)
 	{
-		new_environ[i] = malloc(shelly_strlen(environ[i]) + 1);
+		new_environ[i] = malloc(shellx_strlen(environ[i]) + 1);
 		if (new_environ[i] == NULL)
 		{
 			for (i--; i >= 0; i--)
@@ -35,7 +35,7 @@ char **shelly_copyenv(void)
 			free(new_environ);
 			return (NULL);
 		}
-		shelly_strcpy(new_environ[i], environ[i]);
+		shellx_strcpy(new_environ[i], environ[i]);
 	}
 	new_environ[i] = NULL;
 
@@ -43,20 +43,20 @@ char **shelly_copyenv(void)
 }
 
 /**
- * shelly_getenv - Gets an environmental variable from the PATH.
+ * shellx_getenv - Gets an environmental variable from the PATH.
  * @var: The name of the environmental variable to get.
  *
  * Return: If the environmental variable does not exist - NULL.
  *         Otherwise - a pointer to the environmental variable.
  */
-char **shelly_getenv(const char *var)
+char **shellx_getenv(const char *var)
 {
 	int i, length;
 
-	length = shelly_strlen(var);
+	length = shellx_strlen(var);
 	for (i = 0; environ[i]; i++)
 	{
-		if (shelly_strncmp(var, environ[i], length) == 0)
+		if (shellx_strncmp(var, environ[i], length) == 0)
 			return (&environ[i]);
 	}
 
@@ -64,9 +64,9 @@ char **shelly_getenv(const char *var)
 }
 
 /**
- * shelly_free_env - Frees the the environment copy.
+ * shellx_free_env - Frees the the environment copy.
  */
-void shelly_free_env(void)
+void shellx_free_env(void)
 {
 	int i;
 

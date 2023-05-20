@@ -4,18 +4,18 @@
  *          Princewill Chimdi Samuel
  */
 
-#include "shell.h"
+#include "shellx.h"
 
-int shelly_create_error(char **args, int err);
-int shelly_num_len(int num);
+int shellx_create_error(char **args, int err);
+int shellx_num_len(int num);
 
 /**
- * shelly_num_len - Counts the digit length of a number.
+ * shellx_num_len - Counts the digit length of a number.
  * @num: The number to measure.
  *
  * Return: The digit length.
  */
-int shelly_num_len(int num)
+int shellx_num_len(int num)
 {
 	unsigned int num1;
 	int len = 1;
@@ -39,15 +39,15 @@ int shelly_num_len(int num)
 }
 
 /**
- * shelly_itoa - Converts an integer to a string.
+ * shellx_itoa - Converts an integer to a string.
  * @num: The integer.
  *
  * Return: The converted string
  */
-char *shelly_itoa(int num)
+char *shellx_itoa(int num)
 {
 	char *buffer;
-	int len = shelly_num_len(num);
+	int len = shellx_num_len(num);
 	unsigned int num1;
 
 	buffer = malloc(sizeof(char) * (len + 1));
@@ -77,42 +77,42 @@ char *shelly_itoa(int num)
 }
 
 /**
- * shelly_create_error - Writes a custom error message to stderr.
+ * shellx_create_error - Writes a custom error message to stderr.
  * @args: An array of arguments.
  * @err: The error value.
  *
  * Return: The error value.
  */
-int shelly_create_error(char **args, int err)
+int shellx_create_error(char **args, int err)
 {
 	char *error = NULL;
 
 	switch (err)
 	{
 	case -1:
-		error = shelly_error_env(args);
+		error = shellx_error_env(args);
 		break;
 	case 1:
-		error = shelly_error_1(args);
+		error = shellx_error_1(args);
 		break;
 	case 2:
 		if (*(args[0]) == 'e')
-			error = shelly_error_2_exit(++args);
+			error = shellx_error_2_exit(++args);
 		else if (args[0][0] == ';' || args[0][0] == '&' || args[0][0] == '|')
-			error = shelly_error_2_syntax(args);
+			error = shellx_error_2_syntax(args);
 		else
-			error = shelly_error_2_cd(args);
+			error = shellx_error_2_cd(args);
 		break;
 	case 126:
-		error = shelly_error_126(args);
+		error = shellx_error_126(args);
 		break;
 	case 127:
-		error = shelly_error_127(args);
+		error = shellx_error_127(args);
 		break;
 	default:
 		break;
 	}
-	write(STDERR_FILENO, error, shelly_strlen(error));
+	write(STDERR_FILENO, error, shellx_strlen(error));
 	if (error)
 		free(error);
 	return (err);

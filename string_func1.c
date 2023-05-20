@@ -4,22 +4,22 @@
  *          Princewill Chimdi Samuel
  */
 
-#include "shell.h"
+#include "shellx.h"
 
-char *shelly_strncat(char *dest, const char *src, size_t n);
-char *shelly_strcat(char *dest, const char *src);
-char *shelly_strchr(char *str, char c);
-int shelly_strlen(const char *str);
-int shelly_strncmp(const char *s1, const char *s2, size_t n);
+char *shellx_strncat(char *dest, const char *src, size_t n);
+char *shellx_strcat(char *dest, const char *src);
+char *shellx_strchr(char *str, char c);
+int shellx_strlen(const char *str);
+int shellx_strncmp(const char *s1, const char *s2, size_t n);
 
 /**
- * shelly_strlen - Returns length of a string
+ * shellx_strlen - Returns length of a string
  * @str: Pointer to the string
  *
  * Return: The length of the string
  */
 
-int shelly_strlen(const char *str)
+int shellx_strlen(const char *str)
 {
 	int len = 0;
 
@@ -33,7 +33,7 @@ int shelly_strlen(const char *str)
 }
 
 /**
- * shelly_strncat - Concantenates two strings where n number
+ * shellx_strncat - Concantenates two strings where n number
  *            of bytes are copied from the src
  * @dest: A pointer to the destination string
  * @src: A pointer to the source string
@@ -42,10 +42,10 @@ int shelly_strlen(const char *str)
  * Return: A pointer to the destination string
  */
 
-char *shelly_strncat(char *dest, const char *src, size_t n)
+char *shellx_strncat(char *dest, const char *src, size_t n)
 {
 	size_t i;
-	size_t len_of_dest = shelly_strlen(dest);
+	size_t len_of_dest = shellx_strlen(dest);
 
 	for (i = 0; i < n && src[i] != '\0'; i++)
 		dest[len_of_dest + i] = src[i];
@@ -55,14 +55,14 @@ char *shelly_strncat(char *dest, const char *src, size_t n)
 }
 
 /**
- * shelly_strcat - Concantenates two strings where n number
+ * shellx_strcat - Concantenates two strings where n number
  *            of bytes are copied from the src
  * @dest: A pointer to the destination string
  * @src: A pointer to the source string
  *
  * Return: A pointer to the destination string
  */
-char *shelly_strcat(char *dest, const char *src)
+char *shellx_strcat(char *dest, const char *src)
 {
 	char *destTemp;
 	const char *srcTemp;
@@ -80,7 +80,7 @@ char *shelly_strcat(char *dest, const char *src)
 }
 
 /**
- * shelly_strchr - Locate character in string
+ * shellx_strchr - Locate character in string
  * @str: The string to search
  * @c: The character to search for
  *
@@ -88,7 +88,7 @@ char *shelly_strcat(char *dest, const char *src)
  *         the string str, or NULL if the character is not found
  */
 
-char *shelly_strchr(char *str, char c)
+char *shellx_strchr(char *str, char c)
 {
 	while (*str != '\0')
 	{
@@ -101,7 +101,7 @@ char *shelly_strchr(char *str, char c)
 }
 
 /**
- * shelly_strncmp - Compare two strings up to a given number of bytes
+ * shellx_strncmp - Compare two strings up to a given number of bytes
  * @s1: The first string
  * @s2: The second string
  * @n: The maximum number of bytes to compare
@@ -110,7 +110,7 @@ char *shelly_strchr(char *str, char c)
  *         bytes of s1 is found, respectively, to be less than, to match, or be
  *         greater than the first n bytes of s2
  */
-int shelly_strncmp(const char *s1, const char *s2, size_t n)
+int shellx_strncmp(const char *s1, const char *s2, size_t n)
 {
 	size_t i;
 

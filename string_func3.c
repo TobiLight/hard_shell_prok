@@ -4,14 +4,14 @@
  *       Brennan D Baraban
  */
 
-#include "shell.h"
+#include "shellx.h"
 
-int shelly_token_len(char *str, char *delim);
-int shelly_token_count(char *str, char *delim);
-char **shelly_strtok(char *str, char *delim);
+int shellx_token_len(char *str, char *delim);
+int shellx_token_count(char *str, char *delim);
+char **shellx_strtok(char *str, char *delim);
 
 /**
- * shelly_token_len - Locates the delimiter i marking the end
+ * shellx_token_len - Locates the delimiter i marking the end
  *             of the first token contained within a string.
  * @str: The string to be searched.
  * @delim: The delimiter character.
@@ -19,7 +19,7 @@ char **shelly_strtok(char *str, char *delim);
  * Return: The delimiter index marking the end of
  *         the intitial token pointed to be str.
  */
-int shelly_token_len(char *str, char *delim)
+int shellx_token_len(char *str, char *delim)
 {
 	int i = 0, len = 0;
 
@@ -33,14 +33,14 @@ int shelly_token_len(char *str, char *delim)
 }
 
 /**
- * shelly_token_count - Counts the number of delimited
+ * shellx_token_count - Counts the number of delimited
  *                words contained within a string.
  * @str: The string to be searched.
  * @delim: The delimiter character.
  *
  * Return: The number of words contained within str.
  */
-int shelly_token_count(char *str, char *delim)
+int shellx_token_count(char *str, char *delim)
 {
 	int i, tokens = 0, len = 0;
 
@@ -52,7 +52,7 @@ int shelly_token_count(char *str, char *delim)
 		if (*(str + i) != *delim)
 		{
 			tokens++;
-			i += shelly_token_len(str + i, delim);
+			i += shellx_token_len(str + i, delim);
 		}
 	}
 
@@ -60,19 +60,19 @@ int shelly_token_count(char *str, char *delim)
 }
 
 /**
- * shelly_strtok - parses a string into a sequence of tokens
+ * shellx_strtok - parses a string into a sequence of tokens
  * @str: Pointer to the string to be parsed
  * @delim: Pointer to bytes that delimits tokens in the parsed string
  *
  * Return: Pointer to the next token or NULL if no tokens
  */
 
-char **shelly_strtok(char *str, char *delim)
+char **shellx_strtok(char *str, char *delim)
 {
 	char **ptr;
 	int i = 0, tokens, t, letters, l;
 
-	tokens = shelly_token_count(str, delim);
+	tokens = shellx_token_count(str, delim);
 	if (tokens == 0)
 		return (NULL);
 
@@ -85,7 +85,7 @@ char **shelly_strtok(char *str, char *delim)
 		while (str[i] == *delim)
 			i++;
 
-		letters = shelly_token_len(str + i, delim);
+		letters = shellx_token_len(str + i, delim);
 		ptr[t] = malloc(sizeof(char) * (letters + 1));
 		if (!ptr[t])
 		{

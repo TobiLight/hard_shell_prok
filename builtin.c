@@ -4,15 +4,15 @@
  *       Princewill Chimdi Samuel
  */
 
-#include "shell.h"
+#include "shellx.h"
 
-int shellby_exit(char **, char **);
-int shellby_cd(char **, char __attribute__((__unused__)) **);
-int shellby_help(char **, char __attribute__((__unused__)) **);
+int shellx_exit(char **, char **);
+int shellx_cd(char **, char __attribute__((__unused__)) **);
+int shellx_help(char **, char __attribute__((__unused__)) **);
 int (*get_builtin(char *))(char **, char **);
 
 /**
- * shelly_exit - Exits the shell.
+ * shellx_exit - Exits the shell.
  * @args: An array of arguments.
  * @beg_arg: A double pointer to the beginning of args.
  *
@@ -20,7 +20,7 @@ int (*get_builtin(char *))(char **, char **);
  *         If the given exit value is invalid - 2.
  *         O/w - exits with the given status value.
  */
-int shelly_exit(char **args, char **beg_arg)
+int shellx_exit(char **args, char **beg_arg)
 {
 	int i = 0, len_of_int = 10;
 	unsigned int max = 1 << (sizeof(int) * 8 - 1), num = 0;
@@ -37,7 +37,7 @@ int shelly_exit(char **args, char **beg_arg)
 			if (i <= len_of_int && args[0][i] >= '0' && args[0][i] <= '9')
 				num = (num * 10) + (args[0][i] - '0');
 			else
-				return (shelly_create_error(--args, 2));
+				return (shellx_create_error(--args, 2));
 			i++;
 		}
 	}
@@ -47,17 +47,17 @@ int shelly_exit(char **args, char **beg_arg)
 	}
 
 	if (num > max - 1)
-		return (shelly_create_error(--args, 2));
+		return (shellx_create_error(--args, 2));
 
 	args -= 1;
-	shelly_free_args(args, beg_arg);
-	shelly_free_env();
-	shelly_free_alias_list(aliases);
+	shellx_free_args(args, beg_arg);
+	shellx_free_env();
+	shellx_free_alias_list(aliases);
 	exit(num);
 }
 
 /**
- * shelly_cd - Changes the current directory of the shellby process.
+ * shellx_cd - Changes the current directory of the shellby process.
  * @args: An array of arguments.
  * @beg_arg: A double pointer to the beginning of args.
  *
@@ -65,7 +65,7 @@ int shelly_exit(char **args, char **beg_arg)
  *         If an error occurs - -1.
  *         Otherwise - 0.
  */
-int shelly_cd(char **args, char __attribute__((__unused__)) **beg_arg)
+int shellx_cd(char **args, char __attribute__((__unused__)) * *beg_arg)
 {
 	char **directory_info, *new_line = "\n";
 	char *oldpwd = NULL, *pwd = NULL;
@@ -77,18 +77,18 @@ int shelly_cd(char **args, char __attribute__((__unused__)) **beg_arg)
 
 	if (args[0])
 	{
-		if (*(args[0]) == '-' || shelly_strcmp(args[0], "--") == 0)
+		if (*(args[0]) == '-' || shellx_strcmp(args[0], "--") == 0)
 		{
 			if ((args[0][1] == '-' && args[0][2] == '\0') ||
 				args[0][1] == '\0')
 			{
-				if (shelly_getenv("OLDPWD") != NULL)
-					(chdir(*shelly_getenv("OLDPWD") + 7));
+				if (shellx_getenv("OLDPWD") != NULL)
+					(chdir(*shellx_getenv("OLDPWD") + 7));
 			}
 			else
 			{
 				free(oldpwd);
-				return (shelly_create_error(args, 2));
+				return (shellx_create_error(args, 2));
 			}
 		}
 		else
@@ -101,14 +101,14 @@ int shelly_cd(char **args, char __attribute__((__unused__)) **beg_arg)
 			else
 			{
 				free(oldpwd);
-				return (shelly_create_error(args, 2));
+				return (shellx_create_error(args, 2));
 			}
 		}
 	}
 	else
 	{
-		if (shelly_getenv("HOME") != NULL)
-			chdir(*(shelly_getenv("HOME")) + 5);
+		if (shellx_getenv("HOME") != NULL)
+			chdir(*(shellx_getenv("HOME")) + 5);
 	}
 	pwd = getcwd(pwd, 0);
 	if (pwd == NULL)
@@ -127,26 +127,34 @@ int shelly_cd(char **args, char __attribute__((__unused__)) **beg_arg)
 
 	directory[0] = "OLDPWD";
 	directory[1] = oldpwd;
+<<<<<<< HEAD
 	if (shelly_setenv(directory, directory) == -1)
-	{
-		free(oldpwd);
-		free(pwd);
-		free(directory);
-		return (-1);
-	}
+		== == == =
+					 if (shellx_setenv(directory, directory) == -1)
+>>>>>>> f6d4f2ce2f027cb9a6c6819b71fa5b9458df036e
+		{
+			free(oldpwd);
+			free(pwd);
+			free(directory);
+			return (-1);
+		}
 
 	directory[0] = "PWD";
 	directory[1] = pwd;
+<<<<<<< HEAD
 	if (shelly_setenv(directory, directory) == -1)
-	{
-		free(oldpwd);
-		free(pwd);
-		free(directory);
-		return (-1);
-	}
+		== == == =
+					 if (shellx_setenv(directory, directory) == -1)
+>>>>>>> f6d4f2ce2f027cb9a6c6819b71fa5b9458df036e
+		{
+			free(oldpwd);
+			free(pwd);
+			free(directory);
+			return (-1);
+		}
 	if (args[0] && args[0][0] == '-' && args[0][1] != '-')
 	{
-		write(STDOUT_FILENO, pwd, shelly_strlen(pwd));
+		write(STDOUT_FILENO, pwd, shellx_strlen(pwd));
 		write(STDOUT_FILENO, new_line, 1);
 	}
 	free(oldpwd);
@@ -156,61 +164,63 @@ int shelly_cd(char **args, char __attribute__((__unused__)) **beg_arg)
 }
 
 /**
- * shelly_help - Displays information about shellby builtin commands.
+ * shellx_help - Displays information about shellby builtin commands.
  * @args: An array of arguments.
  * @beg_arg: A pointer to the beginning of args.
  *
  * Return: 0 on success, -1 on failure.
  */
-int shelly_help(char **args, char __attribute__((__unused__)) * *beg_arg)
+<<<<<<< HEAD
+int shelly_help(char **args, char __attribute__((__unused__)) * *beg_arg) == == == =
+																					   int shellx_help(char **args, char __attribute__((__unused__)) * *beg_arg)
+>>>>>>> f6d4f2ce2f027cb9a6c6819b71fa5b9458df036e
 {
 	if (args[0] == NULL)
-		shelly_help_all();
-	else if (shelly_strcmp(args[0], "help") == 0)
-		shelly_help_help();
-	else if (shelly_strcmp(args[0], "cd") == 0)
-		shelly_help_cd();
-	else if (shelly_strcmp(args[0], "alias") == 0)
-		shelly_help_alias();
-	else if (shelly_strcmp(args[0], "exit") == 0)
-		shelly_help_exit();
-	else if (shelly_strcmp(args[0], "env") == 0)
-		shelly_help_env();
-	else if (shelly_strcmp(args[0], "setenv") == 0)
-		shelly_help_setenv();
-	else if (shelly_strcmp(args[0], "unsetenv") == 0)
-		shelly_help_unsetenv();
+		shellx_help_all();
+	else if (shellx_strcmp(args[0], "help") == 0)
+		shellx_help_help();
+	else if (shellx_strcmp(args[0], "cd") == 0)
+		shellx_help_cd();
+	else if (shellx_strcmp(args[0], "alias") == 0)
+		shellx_help_alias();
+	else if (shellx_strcmp(args[0], "exit") == 0)
+		shellx_help_exit();
+	else if (shellx_strcmp(args[0], "env") == 0)
+		shellx_help_env();
+	else if (shellx_strcmp(args[0], "setenv") == 0)
+		shellx_help_setenv();
+	else if (shellx_strcmp(args[0], "unsetenv") == 0)
+		shellx_help_unsetenv();
 	else
-		write(STDERR_FILENO, name, shelly_strlen(name));
+		write(STDERR_FILENO, name, shellx_strlen(name));
 
 	return (0);
 }
 
 /**
- * shelly_get_builtin - Matches a command with a corresponding
- *               shelly builtin function.
+ * shellx_get_builtin - Matches a command with a corresponding
+ *               shellx builtin function.
  * @command: The command to match.
  *
  * Return: A function pointer to the corresponding builtin.
  */
-int (*shelly_get_builtin(char *command))(char **args, char **beg_arg)
+int (*shellx_get_builtin(char *command))(char **args, char **beg_arg)
 {
 	int i;
 	sh_builtin_t bf[] = {
-		{"exit", shelly_exit},
-		{"env", shelly_env},
-		{"setenv", shelly_setenv},
-		{"unsetenv", shelly_unsetenv},
-		{"cd", shelly_cd},
-		{"alias", shelly_alias},
-		{"help", shelly_help},
+		{"exit", shellx_exit},
+		{"env", shellx_env},
+		{"setenv", shellx_setenv},
+		{"unsetenv", shellx_unsetenv},
+		{"cd", shellx_cd},
+		{"alias", shellx_alias},
+		{"help", shellx_help},
 		{NULL, NULL}};
 
 	i = 0;
 	while (bf[i].name)
 	{
-
-		if (shelly_strcmp(bf[i].name, command) == 0)
+		if (shellx_strcmp(bf[i].name, command) == 0)
 			break;
 		i++;
 	}

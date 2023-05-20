@@ -4,13 +4,13 @@
  *          Princewill Chimdi Samuel
  */
 
-#include "shell.h"
+#include "shellx.h"
 
-char *shelly_get_pid(void);
-char *shelly_get_env_value(char *, int);
+char *shellx_get_pid(void);
+char *shellx_get_env_value(char *, int);
 
 /**
- * shelly_get_pid - Gets the current process ID.
+ * shellx_get_pid - Gets the current process ID.
  * Description: Opens the stat file, a space-delimited file containing
  *              information about the current process. The PID is the
  *              first word in the file. The function reads the PID into
@@ -18,7 +18,7 @@ char *shelly_get_env_value(char *, int);
  *
  * Return: The current process ID or NULL on failure.
  */
-char *shelly_get_pid(void)
+char *shellx_get_pid(void)
 {
 	size_t i = 0;
 	char *buffer;
@@ -46,7 +46,7 @@ char *shelly_get_pid(void)
 }
 
 /**
- * shelly_get_env_value - Gets the value corresponding
+ * shellx_get_env_value - Gets the value corresponding
  *                        to an environmental variable.
  * @beginning: The environmental variable to search for.
  * @length: The length of the environmental variable to search for.
@@ -56,7 +56,7 @@ char *shelly_get_pid(void)
  *
  * Description: Variables are stored in the format VARIABLE=VALUE.
  */
-char *shelly_get_env_value(char *beginning, int length)
+char *shellx_get_env_value(char *beginning, int length)
 {
 	char **var_addy;
 	char *repl = NULL, *temp, *var;
@@ -65,9 +65,9 @@ char *shelly_get_env_value(char *beginning, int length)
 	if (!var)
 		return (NULL);
 	var[0] = '\0';
-	shelly_strncat(var, beginning, length);
+	shellx_strncat(var, beginning, length);
 
-	var_addy = shelly_getenv(var);
+	var_addy = shellx_getenv(var);
 	free(var);
 	if (var_addy)
 	{
@@ -75,22 +75,22 @@ char *shelly_get_env_value(char *beginning, int length)
 		while (*temp != '=')
 			temp++;
 		temp++;
-		repl = malloc(shelly_strlen(temp) + 1);
+		repl = malloc(shellx_strlen(temp) + 1);
 		if (repl)
-			shelly_strcpy(repl, temp);
+			shellx_strcpy(repl, temp);
 	}
 
 	return (repl);
 }
 
 /**
- * shelly_free_args - Frees up memory taken by args.
+ * shellx_free_args - Frees up memory taken by args.
  * @args: A null-terminated double pointer containing commands/arguments.
  * @beg_args: A double pointer to the beginning of args.
  *
  * Return: nothing
  */
-void shelly_free_args(char **args, char **beg_args)
+void shellx_free_args(char **args, char **beg_args)
 {
 	size_t i;
 
@@ -101,7 +101,7 @@ void shelly_free_args(char **args, char **beg_args)
 }
 
 /**
- * shelly_replace_variable - Replaces special strings in the command line.
+ * shellx_replace_variable - Replaces special strings in the command line.
  * @line: A double pointer containing the command and arguments.
  * @exe_ret: A pointer to the return value of the last executed command.
  *
@@ -109,7 +109,7 @@ void shelly_free_args(char **args, char **beg_args)
  *              of the last executed program, and environmental variables
  *              preceded by $ with their corresponding value.
  */
-void shelly_replace_variable(char **line, int *exe_ret)
+void shellx_replace_variable(char **line, int *exe_ret)
 {
 	int i, j = 0, len;
 	char *repl = NULL, *old_line = NULL, *new_line;
@@ -122,12 +122,12 @@ void shelly_replace_variable(char **line, int *exe_ret)
 		{
 			if (old_line[i + 1] == '$')
 			{
-				repl = shelly_get_pid();
+				repl = shellx_get_pid();
 				j = i + 2;
 			}
 			else if (old_line[i + 1] == '?')
 			{
-				repl = shelly_itoa(*exe_ret);
+				repl = shellx_itoa(*exe_ret);
 				j = i + 2;
 			}
 			else if (old_line[i + 1])
@@ -139,21 +139,21 @@ void shelly_replace_variable(char **line, int *exe_ret)
 					 j++)
 					;
 				len = j - (i + 1);
-				repl = shelly_get_env_value(&old_line[i + 1], len);
+				repl = shellx_get_env_value(&old_line[i + 1], len);
 			}
-			new_line = malloc(i + shelly_strlen(repl)
-					+ shelly_strlen(&old_line[j]) + 1);
+			new_line = malloc(i + shellx_strlen(repl)
+					+ shellx_strlen(&old_line[j]) + 1);
 			if (!line)
 				return;
 			new_line[0] = '\0';
-			shelly_strncat(new_line, old_line, i);
+			shellx_strncat(new_line, old_line, i);
 			if (repl)
 			{
-				shelly_strcat(new_line, repl);
+				shellx_strcat(new_line, repl);
 				free(repl);
 				repl = NULL;
 			}
-			shelly_strcat(new_line, &old_line[j]);
+			shellx_strcat(new_line, &old_line[j]);
 			free(old_line);
 			*line = new_line;
 			old_line = new_line;
