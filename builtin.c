@@ -14,15 +14,15 @@ int (*get_builtin(char *))(char **, char **);
 /**
  * shelly_exit - Exits the shell.
  * @args: An array of arguments.
- * @front: A double pointer to the beginning of args.
+ * @beg_arg: A double pointer to the beginning of args.
  *
  * Return: If there are no arguments - -3.
  *         If the given exit value is invalid - 2.
  *         O/w - exits with the given status value.
  */
-int shelly_exit(char **args, char **front)
+int shelly_exit(char **args, char **beg_arg)
 {
-	int i = 0, int_len = 10;
+	int i = 0, len_of_int = 10;
 	unsigned int max = 1 << (sizeof(int) * 8 - 1), num = 0;
 
 	if (args[0])
@@ -30,11 +30,11 @@ int shelly_exit(char **args, char **front)
 		if (args[0][0] == '+')
 		{
 			i = 1;
-			int_len++;
+			len_of_int++;
 		}
 		while (args[0][i])
 		{
-			if (i <= int_len && args[0][i] >= '0' && args[0][i] <= '9')
+			if (i <= len_of_int && args[0][i] >= '0' && args[0][i] <= '9')
 				num = (num * 10) + (args[0][i] - '0');
 			else
 				return (shelly_create_error(--args, 2));
@@ -50,7 +50,7 @@ int shelly_exit(char **args, char **front)
 		return (shelly_create_error(--args, 2));
 
 	args -= 1;
-	shelly_free_args(args, front);
+	shelly_free_args(args, beg_arg);
 	shelly_free_env();
 	shelly_free_alias_list(aliases);
 	exit(num);
@@ -117,31 +117,31 @@ int shelly_cd(char **args, char __attribute__((__unused__)) **beg_arg)
 		return (-1);
 	}
 
-	dir_info = malloc(sizeof(char *) * 2);
-	if (dir_info == NULL)
+	directory = malloc(sizeof(char *) * 2);
+	if (directory == NULL)
 	{
 		free(oldpwd);
 		free(pwd);
 		return (-1);
 	}
 
-	dir_info[0] = "OLDPWD";
-	dir_info[1] = oldpwd;
-	if (shelly_setenv(dir_info, dir_info) == -1)
+	directory[0] = "OLDPWD";
+	directory[1] = oldpwd;
+	if (shelly_setenv(directory, directory) == -1)
 	{
 		free(oldpwd);
 		free(pwd);
-		free(dir_info);
+		free(directory);
 		return (-1);
 	}
 
-	dir_info[0] = "PWD";
-	dir_info[1] = pwd;
-	if (shelly_setenv(dir_info, dir_info) == -1)
+	directory[0] = "PWD";
+	directory[1] = pwd;
+	if (shelly_setenv(directory, directory) == -1)
 	{
 		free(oldpwd);
 		free(pwd);
-		free(dir_info);
+		free(directory);
 		return (-1);
 	}
 	if (args[0] && args[0][0] == '-' && args[0][1] != '-')
@@ -158,11 +158,11 @@ int shelly_cd(char **args, char __attribute__((__unused__)) **beg_arg)
 /**
  * shelly_help - Displays information about shellby builtin commands.
  * @args: An array of arguments.
- * @front: A pointer to the beginning of args.
+ * @beg_arg: A pointer to the beginning of args.
  *
  * Return: 0 on success, -1 on failure.
  */
-int shelly_help(char **args, char __attribute__((__unused__)) **front)
+int shelly_help(char **args, char __attribute__((__unused__)) * *beg_arg)
 {
 	if (args[0] == NULL)
 		shelly_help_all();
@@ -189,11 +189,11 @@ int shelly_help(char **args, char __attribute__((__unused__)) **front)
 /**
  * shelly_get_builtin - Matches a command with a corresponding
  *               shelly builtin function.
- * @cmd: The command to match.
+ * @command: The command to match.
  *
  * Return: A function pointer to the corresponding builtin.
  */
-int (*shelly_get_builtin(char *cmd))(char **args, char **front)
+int (*shelly_get_builtin(char *command))(char **args, char **beg_arg)
 {
 	int i;
 	sh_builtin_t bf[] = {
@@ -210,7 +210,7 @@ int (*shelly_get_builtin(char *cmd))(char **args, char **front)
 	while (bf[i].name)
 	{
 
-		if (shelly_strcmp(bf[i].name, cmd) == 0)
+		if (shelly_strcmp(bf[i].name, command) == 0)
 			break;
 		i++;
 	}
